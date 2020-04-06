@@ -12,4 +12,9 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.8" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Snippy.Data\Snippy.Data.csproj" />
+    <ProjectReference Include="..\Snippy.Models\Snippy.Models.csproj" />
+  </ItemGroup>
+
 </Project>

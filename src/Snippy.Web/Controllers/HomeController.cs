@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Snippy.Data;
 using Snippy.Web.Models;
 
 namespace Snippy.Web.Controllers
@@ -12,10 +13,12 @@ namespace Snippy.Web.Controllers
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
+		private readonly IData _data;
 
-		public HomeController(ILogger<HomeController> logger)
+		public HomeController(ILogger<HomeController> logger, IData SnippyData)
 		{
-			_logger = logger;
+			_logger = logger ?? throw new ArgumentNullException(nameof(logger));
+			_data = SnippyData ?? throw new ArgumentNullException(nameof(SnippyData));
 		}
 
 		public IActionResult Index()

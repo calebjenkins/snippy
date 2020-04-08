@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Lamar.Microsoft.DependencyInjection;
 
 namespace Snippy.Web
 {
@@ -18,6 +19,7 @@ namespace Snippy.Web
 
 		public static IHostBuilder CreateHostBuilder(string[] args) =>
 				Host.CreateDefaultBuilder(args)
+						.UseLamar(new DependencyRegistration())
 						.ConfigureWebHostDefaults(webBuilder =>
 						{
 							webBuilder.UseStartup<Startup>();

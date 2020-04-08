@@ -1,4 +1,5 @@
 using System;
+using Snippy.Models;
 
 namespace Snippy.Web.Models
 {

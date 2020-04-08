@@ -23,7 +23,13 @@ namespace Snippy.Web.Controllers
 
 		public IActionResult Index()
 		{
-			return View();
+			var model = new IndexViewModel()
+			{
+				Platform = Environment.OSVersion.ToString(),
+				AuthenticatedUser = _data.GetOwner("hello")
+			};
+
+			return View(model);
 		}
 
 		public IActionResult Privacy()

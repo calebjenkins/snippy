@@ -48,31 +48,44 @@ namespace Snippy.Web
 			//app.UseAuthentication();
 			//app.UseAuthorization();
 
+			/*
+			 * It took me about a week of part time research to figure out how
+			 * routing and endpoints work in .NET CORE 3+
+			 * These two articles were my best help:
+			 * https://docs.microsoft.com/en-us/aspnet/core/fundamentals/routing?view=aspnetcore-3.1
+			 * https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/routing?view=aspnetcore-3.1
+			 */
+
 			app.UseEndpoints(endpoints =>
 			{
-				//endpoints.MapHealthChecks("/healthz").RequireAuthorization();
+				//endpoints.MapHealthChecks("api/hc").RequireAuthorization();
+				// at some point I want to explore adding standard health checks to all my apps.
+				// https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks#Tutorials,-demos-and-walkthroughs-on-ASP.NET-Core-HealthChecks
 
-				endpoints.MapGet("/hello/{name:alpha}", async context =>
-				{
-					var name = context.Request.RouteValues["name"];
-					await context.Response.WriteAsync($"Hello there {name}");
-				});
-
-				endpoints.MapGet("/", async context =>
-				{
-					await context.Response.WriteAsync($"Hola Amigo! {DateTime.Now.ToString()}");
-				});
 
 				endpoints.MapDefaultControllerRoute();
 
-				endpoints.MapControllerRoute(name: "blog",
-					pattern: "blog/{id}/{*ExtraPath}",
-					defaults: new { controller ="Home", action = "Short" }
+				endpoints.MapControllerRoute(name: "short",
+					pattern: "/{id:alpha}/{*ExtraPath}",
+					defaults: new { controller = "Home", action = "Short" }
 					);
 
-				//endpoints.MapControllerRoute(
-				//					name: "default",
-				//					pattern: "{controller=Home}/{action=Index}/{id?}");
+				endpoints.MapControllerRoute(
+									name: "default",
+									pattern: "/",
+									defaults: new { controller = "Home", action = "index" }
+									);
+
+				endpoints.MapControllerRoute(
+									name: "api",
+									pattern: "api/{controller=Home}/{action=index}/{id?}"
+									);
+
+				endpoints.MapControllerRoute(
+					name: "php",
+					pattern: "/home.php/{action=index}/{id?}",
+					defaults: new { controller = "Home", action = "index" }
+					);
 			});
 		}
 	}

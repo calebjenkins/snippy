@@ -4,10 +4,10 @@
     <h1 class="display-4">Welcome</h1>
     <p>Platform: @Model.Platform</p>
     <h2>Welcome @Model.AuthenticatedUser.FirstName</h2>
-    <ul style="border-width:1px; border-color:gray; border-style:solid; width: 200px; text-align:left;">
+    <ul style="border-width:1px; border-color:gray; border-style:solid; width: 300px; text-align:left;">
         @foreach (var url in Model.AuthenticatedUser.URLs)
         {
-        <li><a href="/@url.Key">@url.Key</a></li>
+        <li><a href="/@url.Key">@url.Key</a> | @url.Url</li>
         }
     </ul>
 

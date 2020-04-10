@@ -24,7 +24,9 @@ namespace Snippy.Data
 			List<ShortURL> urls = new List<ShortURL>()
 			{
 				new ShortURL() { Key = "goog", Url = "https://google.com" },
-				new ShortURL() { Key = "me", Url = "https://developingux.com" }
+				new ShortURL() { Key = "me", Url = "https://developingux.com" },
+				new ShortURL() { Key = "index", Url = "https://linkedin.com" },
+				new ShortURL() { Key = "li", Url = "https://linkedin.com/in/calebjenkins/" },
 			};
 
 			foreach (var url in urls)
@@ -61,7 +63,7 @@ namespace Snippy.Data
 
 		public bool RegisterUrl(ShortURL Url, Owner owner)
 		{
-			if (IsIdAvail(Url.Key))
+			if (!IsIdAvail(Url.Key))
 				return false;
 			else
 			{

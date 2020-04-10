@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -44,13 +45,34 @@ namespace Snippy.Web
 
 			app.UseRouting();
 
-			app.UseAuthorization();
+			//app.UseAuthentication();
+			//app.UseAuthorization();
 
 			app.UseEndpoints(endpoints =>
 			{
-				endpoints.MapControllerRoute(
-									name: "default",
-									pattern: "{controller=Home}/{action=Index}/{id?}");
+				//endpoints.MapHealthChecks("/healthz").RequireAuthorization();
+
+				endpoints.MapGet("/hello/{name:alpha}", async context =>
+				{
+					var name = context.Request.RouteValues["name"];
+					await context.Response.WriteAsync($"Hello there {name}");
+				});
+
+				endpoints.MapGet("/", async context =>
+				{
+					await context.Response.WriteAsync($"Hola Amigo! {DateTime.Now.ToString()}");
+				});
+
+				endpoints.MapDefaultControllerRoute();
+
+				endpoints.MapControllerRoute(name: "blog",
+					pattern: "blog/{id}/{*ExtraPath}",
+					defaults: new { controller ="Home", action = "Short" }
+					);
+
+				//endpoints.MapControllerRoute(
+				//					name: "default",
+				//					pattern: "{controller=Home}/{action=Index}/{id?}");
 			});
 		}
 	}

@@ -1,6 +1,7 @@
 using Lamar;
 using Microsoft.Extensions.Logging;
 using Snippy.Data;
+using Snippy.Web.Controllers;
 using System;
 using System.Linq;
 

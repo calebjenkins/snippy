@@ -8,5 +8,6 @@ namespace Snippy.Web.Models
 		public Owner AuthenticatedUser { get; set; }
 		public string Title => "Snippy Web";
 		public string Platform { get; set; }
+		public string Message { get; set; }
 	}
 }

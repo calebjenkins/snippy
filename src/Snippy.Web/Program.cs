@@ -20,6 +20,7 @@ namespace Snippy.Web
 		public static IHostBuilder CreateHostBuilder(string[] args) =>
 				Host.CreateDefaultBuilder(args)
 						.UseLamar(new DependencyRegistration())
+
 						.ConfigureWebHostDefaults(webBuilder =>
 						{
 							webBuilder.UseStartup<Startup>();

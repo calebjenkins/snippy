@@ -21,16 +21,34 @@ namespace Snippy.Web.Controllers
 			_data = SnippyData ?? throw new ArgumentNullException(nameof(SnippyData));
 		}
 
-		public IActionResult Index()
+		public IActionResult Index(string Id)
 		{
 			var model = new IndexViewModel()
 			{
 				Platform = Environment.OSVersion.ToString(),
-				AuthenticatedUser = _data.GetOwner("hello")
+				AuthenticatedUser = _data.GetOwner("hello"),
+				Message = "-->" + Id + "<--"
 			};
+
+			_logger.LogInformation($"Log Info from Index controller { DateTime.Now.ToString() }");
 
 			return View(model);
 		}
+
+		public IActionResult Short(string Id, string ExtraPath)
+		{
+			var model = new IndexViewModel()
+			{
+				Platform = Environment.OSVersion.ToString(),
+				AuthenticatedUser = _data.GetOwner("hello"),
+				Message = $"-->{Id}<-- -->{ExtraPath}<--"
+			};
+
+			_logger.LogInformation($"Log Info from Index controller { DateTime.Now.ToString() }");
+
+			return View("Index", model);
+		}
+
 
 		public IActionResult Privacy()
 		{

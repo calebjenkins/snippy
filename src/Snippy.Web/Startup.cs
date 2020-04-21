@@ -2,18 +2,26 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.OpenIdConnect.Claims;
+using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
+using Microsoft.Owin.Security.OpenIdConnect;
+using Microsoft.Owin.Extensions;
 
 namespace Snippy.Web
 {
 	public class Startup
 	{
-		public Startup(IConfiguration configuration)
+		public Startup(IConfiguration configuration, IWebHostEnvironment env)
 		{
 			Configuration = configuration;
 		}
@@ -23,6 +31,7 @@ namespace Snippy.Web
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.UseCustomAuthentication(Configuration);
 			services.AddControllersWithViews();
 		}
 
@@ -45,8 +54,8 @@ namespace Snippy.Web
 
 			app.UseRouting();
 
-			//app.UseAuthentication();
-			//app.UseAuthorization();
+			app.UseAuthentication();
+			app.UseAuthorization();
 
 			/*
 			 * It took me about a week of part time research to figure out how
@@ -63,7 +72,7 @@ namespace Snippy.Web
 				// https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks#Tutorials,-demos-and-walkthroughs-on-ASP.NET-Core-HealthChecks
 
 
-				endpoints.MapDefaultControllerRoute();
+				// endpoints.MapDefaultControllerRoute();
 
 				endpoints.MapControllerRoute(name: "short",
 					pattern: "/{id:alpha}/{*ExtraPath}",
@@ -74,7 +83,7 @@ namespace Snippy.Web
 									name: "default",
 									pattern: "/",
 									defaults: new { controller = "Home", action = "index" }
-									);
+									).RequireAuthorization() ;
 
 				endpoints.MapControllerRoute(
 									name: "api",

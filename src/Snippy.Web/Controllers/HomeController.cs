@@ -25,6 +25,7 @@ namespace Snippy.Web.Controllers
 		{
 			var model = new IndexViewModel()
 			{
+				Title = "Snippy Web | Main",
 				Platform = Environment.OSVersion.ToString(),
 				AuthenticatedUser = _data.GetOwner("hello"),
 				Message = "-->" + Id + "<--"
@@ -39,12 +40,13 @@ namespace Snippy.Web.Controllers
 		{
 			var model = new IndexViewModel()
 			{
+				Title = "Snippy Web | Short",
 				Platform = Environment.OSVersion.ToString(),
 				AuthenticatedUser = _data.GetOwner("hello"),
 				Message = $"-->{Id}<-- -->{ExtraPath}<--"
 			};
 
-			_logger.LogInformation($"Log Info from Index controller { DateTime.Now.ToString() }");
+			_logger.LogInformation($"Log Info from Shorty controller { DateTime.Now.ToString() }");
 
 			return View("Index", model);
 		}

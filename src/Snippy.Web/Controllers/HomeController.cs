@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -23,12 +24,16 @@ namespace Snippy.Web.Controllers
 
 		public IActionResult Index(string Id)
 		{
+			var identity = User.Identity as ClaimsIdentity; // Azure AD V2 endpoint specific
+			string preferred_username = identity.Claims.FirstOrDefault(c => c.Type == "preferred_username")?.Value;
+
+
 			var model = new IndexViewModel()
 			{
 				Title = "Snippy Web | Main",
 				Platform = Environment.OSVersion.ToString(),
 				AuthenticatedUser = _data.GetOwner("hello"),
-				Message = "-->" + Id + "<--"
+				Message = $"-->{Id}<-- Welcome: {preferred_username}"
 			};
 
 			_logger.LogInformation($"Log Info from Index controller { DateTime.Now.ToString() }");

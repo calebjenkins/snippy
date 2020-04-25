@@ -98,13 +98,6 @@ namespace Snippy.Web
 									name: "api",
 									pattern: "api/{controller=Home}/{action=index}/{id?}"
 									);
-
-				endpoints.MapControllerRoute(
-									name: "anom",
-									pattern: "/nope/",
-									defaults: new { controller = "Home", action = "index" }
-									);
-
 			});
 		}
 	}

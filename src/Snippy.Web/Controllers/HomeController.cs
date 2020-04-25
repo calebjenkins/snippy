@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
+using System.Diagnostics;
 using System.Security.Claims;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -30,7 +28,7 @@ namespace Snippy.Web.Controllers
 
 		public IActionResult Index(string Id)
 		{
-			var identity = User.Identity as ClaimsIdentity; // Azure AD V2 endpoint specific
+			var identity = _httpAccessor.ActionContext.HttpContext.User.Identity as ClaimsIdentity; // Azure AD V2 endpoint specific
 			string preferred_username = identity.Claims.FirstOrDefault(c => c.Type == "preferred_username")?.Value;
 
 
@@ -44,7 +42,7 @@ namespace Snippy.Web.Controllers
 
 			_logger.LogInformation($"Log Info from Index controller { DateTime.Now.ToString() }");
 
-			return View(model);
+			return View("Index", model);
 		}
 
 		[AllowAnonymous]
@@ -62,6 +60,10 @@ namespace Snippy.Web.Controllers
 			};
 
 			var data = _data.RegisterClick(request);
+			if(data == null)
+			{
+				return Index(Id);
+			}
 
 			var extraPathWithQuery = ExtraPath + HttpContext.Request.QueryString.Value;
 			var urlDivider = (data.Url.EndsWith('/')) ? string.Empty : "/";

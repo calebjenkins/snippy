@@ -1,15 +1,8 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.AzureAD.UI;
-using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using Microsoft.AspNetCore.Authentication.OpenIdConnect;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Protocols.OpenIdConnect;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.Owin.Security.OpenIdConnect;
-using System;
-using System.Linq;
 
 namespace Snippy.Web
 {
@@ -18,21 +11,21 @@ namespace Snippy.Web
 		public static void UseCustomAuthentication(this IServiceCollection services, IConfiguration Configuration)
 		{
 			// This is really 3 lines of code and a TON of comments/notes
-		// Use:
-		//  dotnet user-secrets add "AzureAd:Instance" "https://login.microsoftonline.com/"
-		//  dotnet user-secrets add "AzureAd:TenantId" "common"
-		//  dotnet user-secrets add "AzureAd:ClientId" "CLIENT_IF_FROM_AZURE_AD"
-		//  dotnet user-secrets add "AzureAd:CallbackPath" "/signin-oidc"
-		// Update appSettings.json:
-		//"AzureAd": {
-		//  "Instance": "https://login.microsoftonline.com/",
-		//  "TenantId": "common",
-		//  "ClientId": "CLIENT_IF_FROM_AZURE_AD",
-		//  "CallbackPath": "/signin-oidc"
-		//},
+			// Use:
+			//  dotnet user-secrets add "AzureAd:Instance" "https://login.microsoftonline.com/"
+			//  dotnet user-secrets add "AzureAd:TenantId" "common"
+			//  dotnet user-secrets add "AzureAd:ClientId" "CLIENT_IF_FROM_AZURE_AD"
+			//  dotnet user-secrets add "AzureAd:CallbackPath" "/signin-oidc"
+			// Update appSettings.json:
+			//"AzureAd": {
+			//  "Instance": "https://login.microsoftonline.com/",
+			//  "TenantId": "common",
+			//  "ClientId": "CLIENT_IF_FROM_AZURE_AD",
+			//  "CallbackPath": "/signin-oidc"
+			//},
 
-		services.AddAuthentication(AzureADDefaults.AuthenticationScheme)
-							.AddAzureAD(options => Configuration.Bind("AzureAd", options));
+			services.AddAuthentication(AzureADDefaults.AuthenticationScheme)
+								.AddAzureAD(options => Configuration.Bind("AzureAd", options));
 
 			services.Configure<OpenIdConnectOptions>(AzureADDefaults.OpenIdScheme, options =>
 			{

@@ -1,17 +1,12 @@
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.AzureAD.UI;
-using Microsoft.AspNetCore.Authentication.OpenIdConnect;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Authorization;
 
 namespace Snippy.Web
 {
@@ -27,8 +22,6 @@ namespace Snippy.Web
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-			// services.UseCustomAuthentication(Configuration);
-
 			services.Configure<CookiePolicyOptions>(options =>
 			{
 				// This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -91,7 +84,7 @@ namespace Snippy.Web
 				endpoints.MapDefaultControllerRoute();
 
 				endpoints.MapControllerRoute(name: "short",
-					pattern: "/{id:alpha}/{*ExtraPath}",
+					pattern: "/{id}/{*ExtraPath}",
 					defaults: new { controller = "Home", action = "Short" }
 					);
 

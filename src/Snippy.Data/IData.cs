@@ -41,7 +41,7 @@ namespace Snippy.Data
 			return new Owner()
 			{
 				Email = "caleb.jenkins@solera.com",
-				Id = "caleb.jenkins@solera.com",
+				Id = IdentId,
 				URLs = _urls.Values.ToList()
 			};
 		}
@@ -53,7 +53,7 @@ namespace Snippy.Data
 
 		public bool IsIdAvail(string UrlKey)
 		{
-			return _urls.ContainsKey(UrlKey);
+			return !_urls.ContainsKey(UrlKey);
 		}
 
 		public ShortURL RegisterClick(ClickRequest request)

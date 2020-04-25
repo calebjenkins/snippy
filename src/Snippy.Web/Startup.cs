@@ -28,7 +28,6 @@ namespace Snippy.Web
 		public void ConfigureServices(IServiceCollection services)
 		{
 			// services.UseCustomAuthentication(Configuration);
-			// services.AddControllersWithViews();
 
 			services.Configure<CookiePolicyOptions>(options =>
 			{
@@ -37,31 +36,7 @@ namespace Snippy.Web
 				options.MinimumSameSitePolicy = SameSiteMode.None;
 			});
 
-			services.AddAuthentication(AzureADDefaults.AuthenticationScheme)
-							.AddAzureAD(options => Configuration.Bind("AzureAd", options));
-
-			services.Configure<OpenIdConnectOptions>(AzureADDefaults.OpenIdScheme, options =>
-			{
-				options.Authority = options.Authority + "/v2.0/";
-
-				// Per the code below, this application signs in users in any Work and School
-				// accounts and any Microsoft Personal Accounts.
-				// If you want to direct Azure AD to restrict the users that can sign-in, change
-				// the tenant value of the appsettings.json file in the following way:
-				// - only Work and School accounts => 'organizations'
-				// - only Microsoft Personal accounts => 'consumers'
-				// - Work and School and Personal accounts => 'common'
-
-				// If you want to restrict the users that can sign-in to only one tenant
-				// set the tenant value in the appsettings.json file to the tenant ID of this
-				// organization, and set ValidateIssuer below to true.
-
-				// If you want to restrict the users that can sign-in to several organizations
-				// Set the tenant value in the appsettings.json file to 'organizations', set
-				// ValidateIssuer, above to 'true', and add the issuers you want to accept to the
-				// options.TokenValidationParameters.ValidIssuers collection
-				options.TokenValidationParameters.ValidateIssuer = false;
-			});
+			services.UseCustomAuthentication(Configuration);
 
 			services.AddMvc(options =>
 			{
@@ -96,7 +71,7 @@ namespace Snippy.Web
 			app.UseRouting();
 
 			app.UseAuthentication();
-			// app.UseAuthorization();
+			app.UseAuthorization();
 
 			/*
 			 * It took me about a week of part time research to figure out how
@@ -106,44 +81,38 @@ namespace Snippy.Web
 			 * https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/routing?view=aspnetcore-3.1
 			 */
 
-			app.UseMvc(routes =>
+			app.UseEndpoints(endpoints =>
 			{
-				routes.MapRoute(
-						name: "default",
-						template: "{controller=Home}/{action=Index}/{id?}");
+				//endpoints.MapHealthChecks("api/hc").RequireAuthorization();
+				// at some point I want to explore adding standard health checks to all my apps.
+				// https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks#Tutorials,-demos-and-walkthroughs-on-ASP.NET-Core-HealthChecks
+
+
+				endpoints.MapDefaultControllerRoute();
+
+				endpoints.MapControllerRoute(name: "short",
+					pattern: "/{id:alpha}/{*ExtraPath}",
+					defaults: new { controller = "Home", action = "Short" }
+					);
+
+				endpoints.MapControllerRoute(
+									name: "default",
+									pattern: "/",
+									defaults: new { controller = "Home", action = "index" }
+									);
+
+				endpoints.MapControllerRoute(
+									name: "api",
+									pattern: "api/{controller=Home}/{action=index}/{id?}"
+									);
+
+				endpoints.MapControllerRoute(
+									name: "anom",
+									pattern: "/nope/",
+									defaults: new { controller = "Home", action = "index" }
+									);
+
 			});
-
-			// app.UseEndpoints(endpoints =>
-			// {
-			//endpoints.MapHealthChecks("api/hc").RequireAuthorization();
-			// at some point I want to explore adding standard health checks to all my apps.
-			// https://github.com/Xabaril/AspNetCore.Diagnostics.HealthChecks#Tutorials,-demos-and-walkthroughs-on-ASP.NET-Core-HealthChecks
-
-
-			// endpoints.MapDefaultControllerRoute();
-
-			//endpoints.MapControllerRoute(name: "short",
-			//	pattern: "/{id:alpha}/{*ExtraPath}",
-			//	defaults: new { controller = "Home", action = "Short" }
-			//	);
-
-			//endpoints.MapControllerRoute(
-			//					name: "default",
-			//					pattern: "/",
-			//					defaults: new { controller = "Home", action = "index" }
-			//					).RequireAuthorization() ;
-
-			//endpoints.MapControllerRoute(
-			//					name: "api",
-			//					pattern: "api/{controller=Home}/{action=index}/{id?}"
-			//					);
-
-			//endpoints.MapControllerRoute(
-			//	name: "php",
-			//	pattern: "/home.php/{action=index}/{id?}",
-			//	defaults: new { controller = "Home", action = "index" }
-			//	);
-			// });
 		}
 	}
 }

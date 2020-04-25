@@ -1,4 +1,5 @@
 using Lamar;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Logging;
 using Snippy.Data;
 using Snippy.Web.Controllers;
@@ -13,6 +14,7 @@ namespace Snippy.Web
 		{
 			For(typeof(ILogger<>)).Use(typeof(Logger<>));
 			For<IData>().Use<SampleData>();
+			For<IActionContextAccessor>().Use<ActionContextAccessor>();
 		}
 	}
 }

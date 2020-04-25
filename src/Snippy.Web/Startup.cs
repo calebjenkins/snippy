@@ -1,10 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -13,7 +12,7 @@ namespace Snippy.Web
 {
 	public class Startup
 	{
-		public Startup(IConfiguration configuration)
+		public Startup(IConfiguration configuration, IWebHostEnvironment env)
 		{
 			Configuration = configuration;
 		}
@@ -23,7 +22,25 @@ namespace Snippy.Web
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
-			services.AddControllersWithViews();
+			services.Configure<CookiePolicyOptions>(options =>
+			{
+				// This lambda determines whether user consent for non-essential cookies is needed for a given request.
+				options.CheckConsentNeeded = context => true;
+				options.MinimumSameSitePolicy = SameSiteMode.None;
+			});
+
+			services.UseCustomAuthentication(Configuration);
+
+			services.AddMvc(options =>
+			{
+				var policy = new AuthorizationPolicyBuilder()
+						.RequireAuthenticatedUser()
+						.Build();
+				options.Filters.Add(new AuthorizeFilter(policy));
+				options.EnableEndpointRouting = false;
+			});
+
+			// .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -42,11 +59,12 @@ namespace Snippy.Web
 
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
+			app.UseCookiePolicy();
 
 			app.UseRouting();
 
-			//app.UseAuthentication();
-			//app.UseAuthorization();
+			app.UseAuthentication();
+			app.UseAuthorization();
 
 			/*
 			 * It took me about a week of part time research to figure out how
@@ -66,7 +84,7 @@ namespace Snippy.Web
 				endpoints.MapDefaultControllerRoute();
 
 				endpoints.MapControllerRoute(name: "short",
-					pattern: "/{id:alpha}/{*ExtraPath}",
+					pattern: "/{id}/{*ExtraPath}",
 					defaults: new { controller = "Home", action = "Short" }
 					);
 
@@ -80,12 +98,6 @@ namespace Snippy.Web
 									name: "api",
 									pattern: "api/{controller=Home}/{action=index}/{id?}"
 									);
-
-				endpoints.MapControllerRoute(
-					name: "php",
-					pattern: "/home.php/{action=index}/{id?}",
-					defaults: new { controller = "Home", action = "index" }
-					);
 			});
 		}
 	}

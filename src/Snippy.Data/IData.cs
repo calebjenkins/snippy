@@ -14,13 +14,15 @@ namespace Snippy.Data
 		bool RegisterUrl(ShortURL Url, Owner owner);
 		bool IsIdAvail(string UrlKey);
 	}
-
 	public class SampleData : IData
 	{
 
 		private Dictionary<string, ShortURL> _urls = new Dictionary<string, ShortURL>();
-		public SampleData()
+		IDataConfiguration _config;
+		public SampleData(IDataConfiguration config)
 		{
+			_config = config;
+
 			List<ShortURL> urls = new List<ShortURL>()
 			{
 				new ShortURL() { Key = "goog", Url = "https://google.com" },

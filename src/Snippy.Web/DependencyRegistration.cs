@@ -2,9 +2,6 @@ using Lamar;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Logging;
 using Snippy.Data;
-using Snippy.Web.Controllers;
-using System;
-using System.Linq;
 
 namespace Snippy.Web
 {
@@ -13,8 +10,9 @@ namespace Snippy.Web
 		public DependencyRegistration()
 		{
 			For(typeof(ILogger<>)).Use(typeof(Logger<>));
-			For<IData>().Use<SampleData>();
-			For<IActionContextAccessor>().Use<ActionContextAccessor>();
+			For<IData>().Use<SampleData>().Singleton();
+			For<IActionContextAccessor>().Use<ActionContextAccessor>().Singleton();
+			For<IDataConfiguration>().Use<DataConfiguration>().Singleton();
 		}
 	}
 }

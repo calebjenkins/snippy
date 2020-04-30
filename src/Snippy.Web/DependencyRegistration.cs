@@ -13,6 +13,7 @@ namespace Snippy.Web
 			For<IData>().Use<SampleData>().Singleton();
 			For<IActionContextAccessor>().Use<ActionContextAccessor>().Singleton();
 			For<IDataConfiguration>().Use<DataConfiguration>().Singleton();
+			For<ISnippyDataContext>().Use<SnippyDataContext>();
 		}
 	}
 }

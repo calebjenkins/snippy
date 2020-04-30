@@ -1,4 +1,5 @@
-﻿using Snippy.Models;
+﻿using Microsoft.Extensions.Configuration;
+using Snippy.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,10 +19,10 @@ namespace Snippy.Data
 	{
 
 		private Dictionary<string, ShortURL> _urls = new Dictionary<string, ShortURL>();
-		IDataConfiguration _config;
-		public SampleData(IDataConfiguration config)
+		private readonly IDataConfiguration _config;
+		public SampleData(IDataConfiguration DbConfig)
 		{
-			_config = config;
+			_config = DbConfig;
 
 			List<ShortURL> urls = new List<ShortURL>()
 			{
@@ -36,6 +37,13 @@ namespace Snippy.Data
 				_urls.Add(url.Key, url);
 			}
 
+			using (var db = new SnippyDataContext(_config))
+			{
+				var urlOwners = db.Owners
+						.Where(o => o.FullName.Length > 3)
+						.OrderBy(b => b.Email)
+						.ToList();
+			}
 		}
 
 		public Owner GetOwner(string IdentId)

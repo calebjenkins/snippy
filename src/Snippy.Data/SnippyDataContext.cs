@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.EntityFrameworkCore.SqlServer;
+using Microsoft.Extensions.Logging;
 using Snippy.Data.Models;
 using System;
 using System.Linq;
@@ -11,7 +11,7 @@ namespace Snippy.Data
 	{
 		/*  ***************************************************************************
 		 *  Use dotnet cli with dotnet-ef tool to make migrations work properly.
-		 *  dotnet tool add dotnet-ef --global
+		 *  > dotnet tool add dotnet-ef --global
 		 *  (need to make sure the dotnet tools director is in the Path - for Windows
 		 *    %userfolder%\.dotnet\tools    ex: C:\Users\First.Last\.dotnet\tools)
 		 *  then cd ./Snippy.Data/
@@ -22,27 +22,20 @@ namespace Snippy.Data
 		 *  dotnet ef migrations remove
 		 *  dotnet ef migrations add InitialCreate --startup-project ..\Snippy.Web\
 		 */
-		IDataConfiguration _config;
-		string _connectionString;
-		public SnippyDataContext()
-		{
-			_connectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;Initial Catalog=SnippyDB;Integrated Security=SSPI;";
-		}
 
-		public SnippyDataContext(IDataConfiguration Config)
+		DbContextOptions _options;
+		ILogger<SnippyDataContext> _logger;
+
+		public SnippyDataContext(DbContextOptions<SnippyDataContext> options, ILogger<SnippyDataContext> logger) : base(options)
 		{
-			_config = Config;
-			_connectionString = _config.ConnectionString;
+			_options = options;
+			_logger = logger;
 		}
 
 		public DbSet<Click> Clicks { get; set; }
 		public DbSet<Owner> Owners { get; set; }
 		public DbSet<ShortURL> URLs { get; set; }
 		public DbSet<OwnerUrls> OwnerUrls { get; set; }
-
-
-		protected override void OnConfiguring(DbContextOptionsBuilder options)
-				 => options.UseSqlServer(_connectionString);
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{

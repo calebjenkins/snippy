@@ -11,9 +11,13 @@ namespace Snippy.Web
 		public DependencyRegistration()
 		{
 			For(typeof(ILogger<>)).Use(typeof(Logger<>));
-			For<IData>().Use<SampleData>().Singleton();
+
+			// Used in Controllers
 			For<IActionContextAccessor>().Use<ActionContextAccessor>().Singleton();
-			For<IDataConfiguration>().Use<DataConfiguration>().Singleton();
+
+			// Data Layer
+			For<IData>().Use<SampleData>().Singleton();
+			// For<IDataConfiguration>().Use<DataConfiguration>().Singleton(); // (Moving this to StartUp.cs Service registration so I can utilize the IConfiguration)
 			For<ISnippyDataContext>().Use<SnippyDataContext>();
 		}
 	}

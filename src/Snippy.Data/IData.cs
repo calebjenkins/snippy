@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Snippy.Models;
 using System;
 using System.Collections.Generic;
@@ -20,9 +22,12 @@ namespace Snippy.Data
 
 		private Dictionary<string, ShortURL> _urls = new Dictionary<string, ShortURL>();
 		private readonly IDataConfiguration _config;
-		public SampleData(IDataConfiguration DbConfig)
+		private readonly DbContextOptions<SnippyDataContext> _options;
+		private readonly ILogger<SnippyDataContext> _dbLogger;
+		public SampleData(DbContextOptions<SnippyDataContext> Options, ILogger<SnippyDataContext> dbLogger)
 		{
-			_config = DbConfig;
+			_options = Options;
+			_dbLogger = dbLogger;
 
 			List<ShortURL> urls = new List<ShortURL>()
 			{
@@ -37,12 +42,10 @@ namespace Snippy.Data
 				_urls.Add(url.Key, url);
 			}
 
-			using (var db = new SnippyDataContext(_config))
+			using (var db = new SnippyDataContext(_options, dbLogger))
 			{
-				var urlOwners = db.Owners
-						.Where(o => o.FullName.Length > 3)
-						.OrderBy(b => b.Email)
-						.ToList();
+				var o = db.Owners.Where(own => own.FullName == "Caleb Jenkins").FirstOrDefault();
+
 			}
 		}
 

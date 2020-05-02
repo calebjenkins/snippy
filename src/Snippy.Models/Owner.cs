@@ -10,8 +10,7 @@ namespace Snippy.Models
 			URLs = new List<ShortURL>();
 		}
 		public string Id { get; set; }
-		public string FirstName { get; set; }
-		public string LastName { get; set; }
+		public string FullName { get; set; }
 		public string Email { get; set; }
 		public IList<ShortURL> URLs { get; set; }
 	}

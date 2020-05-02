@@ -1,12 +1,15 @@
 
+using Lamar;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Snippy.Data;
 
 namespace Snippy.Web
 {
@@ -19,8 +22,19 @@ namespace Snippy.Web
 
 		public IConfiguration Configuration { get; }
 
+		// public void ConfigureServices(ServiceRegistry services) // Lamar
 		public void ConfigureServices(IServiceCollection services)
+
 		{
+			// Set Up Data Access
+			services.AddSingleton<IDataConfiguration>(new DataConfiguration(Configuration));
+			var connString = Configuration.GetValue<string>("DBConfig:ConnectionString");
+
+			var optionsBuilder = new DbContextOptionsBuilder<SnippyDataContext>();
+			optionsBuilder.UseSqlServer(connString);
+			var dbOptions = optionsBuilder.Options;
+			services.AddSingleton<DbContextOptions<SnippyDataContext>>(dbOptions);
+
 			services.Configure<CookiePolicyOptions>(options =>
 			{
 				// This lambda determines whether user consent for non-essential cookies is needed for a given request.
@@ -52,7 +66,6 @@ namespace Snippy.Web
 				app.UseExceptionHandler("/Home/Error");
 				app.UseHsts();
 			}
-
 			app.UseHttpsRedirection();
 			app.UseStaticFiles();
 			app.UseCookiePolicy();

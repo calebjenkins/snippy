@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using Snippy.Data.Models;
 using System;
@@ -8,10 +9,30 @@ namespace Snippy.Data
 {
 	public class SnippyDataContext : DbContext, ISnippyDataContext
 	{
+		/*  ***************************************************************************
+		 *  Use dotnet cli with dotnet-ef tool to make migrations work properly.
+		 *  dotnet tool add dotnet-ef --global
+		 *  (need to make sure the dotnet tools director is in the Path - for Windows
+		 *    %userfolder%\.dotnet\tools    ex: C:\Users\First.Last\.dotnet\tools)
+		 *  then cd ./Snippy.Data/
+		 *  dotnet ef migrations add InitialCreate
+		 *  dotnet ef migrations list
+		 *  dotnet ef database update
+		 *  dotnet ef database drop
+		 *  dotnet ef migrations remove
+		 *  dotnet ef migrations add InitialCreate --startup-project ..\Snippy.Web\
+		 */
 		IDataConfiguration _config;
+		string _connectionString;
+		public SnippyDataContext()
+		{
+			_connectionString = @"Data Source=(LocalDb)\MSSQLLocalDB;Initial Catalog=SnippyDB;Integrated Security=SSPI;";
+		}
+
 		public SnippyDataContext(IDataConfiguration Config)
 		{
 			_config = Config;
+			_connectionString = _config.ConnectionString;
 		}
 
 		public DbSet<Click> Clicks { get; set; }
@@ -21,16 +42,40 @@ namespace Snippy.Data
 
 
 		protected override void OnConfiguring(DbContextOptionsBuilder options)
-				 => options.UseSqlServer(_config.ConnectionString);
+				 => options.UseSqlServer(_connectionString);
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
+			// Owner
+			configureBaseProperties(modelBuilder.Entity<Owner>());
 			modelBuilder.Entity<Owner>()
 				.HasKey(o => o.UserName);
 
+			modelBuilder.Entity<Owner>()
+				.Property<string>(o => o.UserName)
+				.HasMaxLength(100);
+
+			modelBuilder.Entity<Owner>()
+				.Property<string>(o => o.FullName)
+				.HasMaxLength(200);
+
+			modelBuilder.Entity<Owner>()
+				.Property<string>(o => o.Email)
+				.HasMaxLength(100);
+
+
+			// Short URL
+			configureBaseProperties(modelBuilder.Entity<ShortURL>());
 			modelBuilder.Entity<ShortURL>()
 				.HasKey(url => url.Key);
 
+			modelBuilder.Entity<ShortURL>()
+				.Property(url => url.Key)
+				.HasMaxLength(60);
+
+
+			// Click
+			configureBaseProperties(modelBuilder.Entity<Click>(), false);
 			modelBuilder.Entity<Click>()
 				.HasKey(c => c.Id);
 
@@ -40,6 +85,16 @@ namespace Snippy.Data
 				.HasForeignKey(c => c.ShortUrlKey)
 				.IsRequired();
 
+			modelBuilder.Entity<Click>()
+				.Property<string>(c => c.SourceIp)
+				.HasMaxLength(20);
+
+			modelBuilder.Entity<Click>()
+				.Property<string>(c => c.IdentId)
+				.HasMaxLength(100);
+
+			// Owner URL Many-to-Many
+			configureBaseProperties(modelBuilder.Entity<OwnerUrls>());
 			modelBuilder.Entity<OwnerUrls>()
 				.HasKey(x => new { x.OwnerUserName, x.ShortUrlKey, });
 
@@ -52,6 +107,36 @@ namespace Snippy.Data
 				.HasOne(ou => ou.URL)
 				.WithMany(url => url.OwnerURLs)
 				.HasForeignKey(ou => ou.ShortUrlKey);
+		}
+
+		private void configureBaseProperties<T>(EntityTypeBuilder<T> entity, bool IsAuth = true) where T : DataModelBase
+		{
+			entity
+				.Property<string>(e => e.CreatedBy)
+				.HasMaxLength(100);
+
+			entity
+				.Property<string>(e => e.UpdatedBy)
+				.HasMaxLength(100);
+
+			entity
+				.Property<DateTime>(e => e.CreatedOn)
+				.IsRequired();
+
+			entity
+				.Property<DateTime>(e => e.UpdatedOn)
+				.IsRequired();
+
+			if (IsAuth) // These models are only updated when a user is authenticated
+			{
+				entity
+					.Property<string>(e => e.CreatedBy)
+					.IsRequired();
+
+				entity
+					.Property<string>(e => e.UpdatedBy)
+					.IsRequired();
+			}
 		}
 	}
 }

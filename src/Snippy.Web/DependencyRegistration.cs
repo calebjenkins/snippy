@@ -1,5 +1,6 @@
 using Lamar;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Snippy.Data;
 

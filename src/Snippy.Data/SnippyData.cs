@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
-using Snippy.Models;
+using app = Snippy.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Snippy.Data.Models;
 
 namespace Snippy.Data
 {
@@ -17,34 +18,44 @@ namespace Snippy.Data
 			_logger = Logger ?? throw new ArgumentNullException(nameof(Logger));
 		}
 
-		public Owner GetOwner(string IdentId)
+		public app.Owner GetOwner(string IdentId)
 		{
 			var owner = _db.Owners
 			.Where(s => s.UserName == IdentId)
 			.FirstOrDefault();
 
-			//return owner;
-			throw new NotImplementedException();
+			return owner.Convert() ?? new app.Owner();
 		}
 
-		public IList<ShortURL> GetURLs(string IdentId)
+		public IList<app.ShortURL> GetURLs(string IdentId)
 		{
-			throw new NotImplementedException();
+			IList<ShortURL> urls = _db.URLs
+					.Where(u => u.OwnerURLs.Any(ou => ou.OwnerUserName == IdentId)).ToList();
+
+			return urls.Convert();
+
 		}
 
 		public bool IsIdAvail(string UrlKey)
 		{
-			throw new NotImplementedException();
+			var result = _db.URLs.Where(u => u.Key == UrlKey).FirstOrDefault();
+
+			return result == null;
 		}
 
-		public ShortURL RegisterClick(ClickRequest request)
+		public app.ShortURL RegisterClick(app.ClickRequest request)
 		{
 			throw new NotImplementedException();
 		}
 
-		public bool RegisterUrl(ShortURL Url, Owner owner)
+		public bool RegisterUrl(app.ShortURL Url, app.Owner owner)
 		{
 			throw new NotImplementedException();
+		}
+
+		private void upsert(app.Owner owner)
+		{
+
 		}
 	}
 }

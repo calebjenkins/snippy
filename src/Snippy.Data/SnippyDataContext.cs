@@ -28,8 +28,8 @@ namespace Snippy.Data
 
 		public SnippyDataContext(DbContextOptions<SnippyDataContext> options, ILogger<SnippyDataContext> logger) : base(options)
 		{
-			_options = options;
-			_logger = logger;
+			_options = options ?? throw new ArgumentNullException(nameof(options));
+			_logger = logger; // can't check or null... since EF Migrations Design Factory needs to pass null.
 		}
 
 		public DbSet<Click> Clicks { get; set; }

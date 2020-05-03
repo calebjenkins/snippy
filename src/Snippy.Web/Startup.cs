@@ -27,13 +27,10 @@ namespace Snippy.Web
 
 		{
 			// Set Up Data Access
-			services.AddSingleton<IDataConfiguration>(new DataConfiguration(Configuration));
 			var connString = Configuration.GetValue<string>("DBConfig:ConnectionString");
-
 			var optionsBuilder = new DbContextOptionsBuilder<SnippyDataContext>();
-			optionsBuilder.UseSqlServer(connString);
-			var dbOptions = optionsBuilder.Options;
-			services.AddSingleton<DbContextOptions<SnippyDataContext>>(dbOptions);
+			var dbOption = optionsBuilder.UseSqlServer(connString).Options;
+			services.AddSingleton<DbContextOptions<SnippyDataContext>>(dbOption);
 
 			services.Configure<CookiePolicyOptions>(options =>
 			{

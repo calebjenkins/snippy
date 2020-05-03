@@ -21,7 +21,6 @@ namespace Snippy.Data
 	{
 
 		private Dictionary<string, ShortURL> _urls = new Dictionary<string, ShortURL>();
-		private readonly IDataConfiguration _config;
 		private readonly DbContextOptions<SnippyDataContext> _options;
 		private readonly ILogger<SnippyDataContext> _dbLogger;
 		public SampleData(DbContextOptions<SnippyDataContext> Options, ILogger<SnippyDataContext> dbLogger)
@@ -44,8 +43,9 @@ namespace Snippy.Data
 
 			using (var db = new SnippyDataContext(_options, dbLogger))
 			{
-				var o = db.Owners.Where(own => own.FullName == "Caleb Jenkins").FirstOrDefault();
-
+				var o = db.Owners
+					.Where(own => own.FullName == "Caleb Jenkins")
+					.FirstOrDefault();
 			}
 		}
 

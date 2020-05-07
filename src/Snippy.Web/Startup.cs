@@ -103,7 +103,8 @@ namespace Snippy.Web
 				// Reserving now for future work...
 				endpoints.MapControllerRoute(
 									name: "api",
-									pattern: "api/{controller=Home}/{action=index}/{id?}"
+									pattern: "api/{controller}/{action}/{id?}",
+									defaults: new { controller = "Api", action = "hc" }
 									);
 			});
 		}

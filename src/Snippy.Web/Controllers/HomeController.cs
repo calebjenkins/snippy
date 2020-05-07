@@ -9,6 +9,8 @@ using Microsoft.Extensions.Logging;
 using Snippy.Data;
 using Snippy.Models;
 using Snippy.Web.Models;
+using Microsoft.Extensions.Logging.Abstractions;
+using Snippy.Models.Productivity;
 
 namespace Snippy.Web.Controllers
 {
@@ -31,13 +33,13 @@ namespace Snippy.Web.Controllers
 			var identity = _httpAccessor.ActionContext.HttpContext.User.Identity as ClaimsIdentity; // Azure AD V2 endpoint specific
 			string preferred_username = identity.Claims.FirstOrDefault(c => c.Type == "preferred_username")?.Value;
 
-
+			var msg = (Id.IsNullOrEmpty()) ? $"Welcome {preferred_username}!" : "--> 404 Not Found: {Id}";
 			var model = new IndexViewModel()
 			{
 				Title = "Snippy Web | Main",
 				Platform = Environment.OSVersion.ToString(),
 				AuthenticatedUser = _data.GetOwner("hello"),
-				Message = $"-->{Id}<-- Welcome: {preferred_username}"
+				Message = msg
 			};
 
 			_logger.LogInformation($"Log Info from Index controller { DateTime.Now.ToString() }");
@@ -54,13 +56,13 @@ namespace Snippy.Web.Controllers
 
 			var request = new ClickRequest()
 			{
-				ShortUrlId = Id,
+				ShortUrlKey = Id,
 				IdentId = preferred_username,
 				SourceIp = _httpAccessor.ActionContext.HttpContext.Connection.RemoteIpAddress.ToString()
 			};
 
 			var data = _data.RegisterClick(request);
-			if(data == null)
+			if (data == null)
 			{
 				return Index(Id);
 			}
@@ -69,17 +71,10 @@ namespace Snippy.Web.Controllers
 			var urlDivider = (data.Url.EndsWith('/')) ? string.Empty : "/";
 			var completeURL = (extraPathWithQuery.Length > 0) ? data.Url + urlDivider + extraPathWithQuery : data.Url;
 
-			var model = new IndexViewModel()
-			{
-				Title = "Snippy Web | Short",
-				Platform = Environment.OSVersion.ToString(),
-				AuthenticatedUser = _data.GetOwner(preferred_username),
-				Message = $"-->{Id} | {completeURL}<-- for: {user_name} ({preferred_username}) from IP {request.SourceIp}"
-			};
-
-			_logger.LogInformation($"Log Info from Shorty controller { DateTime.Now.ToString() }");
-
-			return View("Index", model);
+			// Send to URL
+			_logger.LogInformation($"Forwarding to {completeURL}");
+			_httpAccessor.ActionContext.HttpContext.Response.Redirect(completeURL);
+			return null;
 		}
 
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

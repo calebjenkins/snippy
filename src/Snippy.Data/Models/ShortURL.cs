@@ -7,7 +7,7 @@ namespace Snippy.Data.Models
 	{
 		public string Key { get; set; }
 		public string Url { get; set; }
-		public IList<OwnerUrls> OwnerURLs { get; set; }
-		public IList<Click> Clicks { get; set; }
+		public ICollection<OwnerUrls> OwnerURLs { get; } = new List<OwnerUrls>();
+		//public ICollection<Click> Clicks { get; } = new List<Click>();
 	}
 }

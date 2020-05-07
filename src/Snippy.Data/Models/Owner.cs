@@ -8,6 +8,6 @@ namespace Snippy.Data.Models
 		public string UserName { get; set; }
 		public string FullName { get; set; }
 		public string Email { get; set; }
-		public IList<OwnerUrls> OwnerURLs { get; set; }
+		public ICollection<OwnerUrls> OwnerURLs { get; } = new List<OwnerUrls>();
 	}
 }

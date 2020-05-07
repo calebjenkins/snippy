@@ -32,6 +32,11 @@ namespace Snippy.Data
 			_logger = logger; // can't check or null... since EF Migrations Design Factory needs to pass null.
 		}
 
+		public override int SaveChanges()
+		{
+			return base.SaveChanges();
+		}
+
 		public DbSet<Click> Clicks { get; set; }
 		public DbSet<Owner> Owners { get; set; }
 		public DbSet<ShortURL> URLs { get; set; }
@@ -72,11 +77,10 @@ namespace Snippy.Data
 			modelBuilder.Entity<Click>()
 				.HasKey(c => c.Id);
 
-			modelBuilder.Entity<Click>()
-				.HasOne<ShortURL>(c => c.UrlClicked)
-				.WithMany(url => url.Clicks)
-				.HasForeignKey(c => c.ShortUrlKey)
-				.IsRequired();
+			//modelBuilder.Entity<Click>()
+			//	.HasOne<ShortURL>(c => c.UrlClicked)
+			//	.WithMany(url => url.Clicks);
+			//	//.HasForeignKey(c => c.ShortUrlKey);
 
 			modelBuilder.Entity<Click>()
 				.Property<string>(c => c.SourceIp)

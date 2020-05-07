@@ -51,7 +51,7 @@ namespace Snippy.Data.Migrations
                     UpdatedOn = table.Column<DateTime>(nullable: false),
                     SourceIp = table.Column<string>(maxLength: 20, nullable: true),
                     IdentId = table.Column<string>(maxLength: 100, nullable: true),
-                    ShortUrlKey = table.Column<string>(nullable: false)
+                    ShortUrlKey = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -61,7 +61,7 @@ namespace Snippy.Data.Migrations
                         column: x => x.ShortUrlKey,
                         principalTable: "URLs",
                         principalColumn: "Key",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(

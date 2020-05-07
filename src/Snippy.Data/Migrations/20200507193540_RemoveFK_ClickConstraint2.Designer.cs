@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Snippy.Data;
 
 namespace Snippy.Data.Migrations
 {
     [DbContext(typeof(SnippyDataContext))]
-    partial class SnippyDataContextModelSnapshot : ModelSnapshot
+    [Migration("20200507193540_RemoveFK_ClickConstraint2")]
+    partial class RemoveFK_ClickConstraint2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

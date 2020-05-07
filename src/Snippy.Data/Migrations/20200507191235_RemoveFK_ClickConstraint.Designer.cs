@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Snippy.Data;
 
 namespace Snippy.Data.Migrations
 {
     [DbContext(typeof(SnippyDataContext))]
-    partial class SnippyDataContextModelSnapshot : ModelSnapshot
+    [Migration("20200507191235_RemoveFK_ClickConstraint")]
+    partial class RemoveFK_ClickConstraint
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -37,7 +39,7 @@ namespace Snippy.Data.Migrations
                         .HasMaxLength(100);
 
                     b.Property<string>("ShortUrlKey")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(60)");
 
                     b.Property<string>("SourceIp")
                         .HasColumnType("nvarchar(20)")
@@ -51,6 +53,8 @@ namespace Snippy.Data.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ShortUrlKey");
 
                     b.ToTable("Clicks");
                 });
@@ -149,6 +153,13 @@ namespace Snippy.Data.Migrations
                     b.HasKey("Key");
 
                     b.ToTable("URLs");
+                });
+
+            modelBuilder.Entity("Snippy.Data.Models.Click", b =>
+                {
+                    b.HasOne("Snippy.Data.Models.ShortURL", null)
+                        .WithMany("Clicks")
+                        .HasForeignKey("ShortUrlKey");
                 });
 
             modelBuilder.Entity("Snippy.Data.Models.OwnerUrls", b =>

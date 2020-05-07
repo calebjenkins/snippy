@@ -10,7 +10,7 @@ using Snippy.Data;
 namespace Snippy.Data.Migrations
 {
     [DbContext(typeof(SnippyDataContext))]
-    [Migration("20200502005802_InitialCreate")]
+    [Migration("20200507190134_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,7 +39,6 @@ namespace Snippy.Data.Migrations
                         .HasMaxLength(100);
 
                     b.Property<string>("ShortUrlKey")
-                        .IsRequired()
                         .HasColumnType("nvarchar(60)");
 
                     b.Property<string>("SourceIp")
@@ -160,9 +159,7 @@ namespace Snippy.Data.Migrations
                 {
                     b.HasOne("Snippy.Data.Models.ShortURL", "UrlClicked")
                         .WithMany("Clicks")
-                        .HasForeignKey("ShortUrlKey")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ShortUrlKey");
                 });
 
             modelBuilder.Entity("Snippy.Data.Models.OwnerUrls", b =>

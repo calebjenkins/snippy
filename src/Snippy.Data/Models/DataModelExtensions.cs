@@ -29,6 +29,9 @@ namespace Snippy.Data.Models
 		public static IList<app.ShortURL> Convert(this IList<ShortURL> model)
 		{
 			IList<app.ShortURL> urls = new List<app.ShortURL>();
+			if (model == null)
+				return urls;
+
 			foreach(var u in model)
 			{
 				urls.Add(u.Convert());
@@ -61,6 +64,22 @@ namespace Snippy.Data.Models
 				Email = model.Email,
 				FullName = model.FullName,
 				UserName = model.Id
+			};
+		}
+
+		public static Click Convert(this app.ClickRequest model)
+		{
+			var now = DateTime.Now;
+			return new Click()
+			{
+				CreatedBy = model.IdentId,
+				CreatedOn = now,
+				UpdatedBy = model.IdentId,
+				UpdatedOn = now,
+				Id = model.RequestId,
+				IdentId = model.IdentId,
+				ShortUrlKey = model.ShortUrlKey,
+				SourceIp = model.SourceIp
 			};
 		}
 

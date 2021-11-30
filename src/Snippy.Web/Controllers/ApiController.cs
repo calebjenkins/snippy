@@ -26,19 +26,22 @@ namespace Snippy.Web.Controllers
 			_httpAccessor = HttpAccessor ?? throw new ArgumentNullException(nameof(HttpAccessor));
 		}
 
-		// [HttpGet]
+		[HttpGet]
+		[Route("./api/hc/")]
 		public IActionResult hc(string Id)
 		{
 			return null;
 		}
 
-		// [HttpGet]
+		[HttpGet]
+		[Route("./api/CheckAvail/{key}/")]
 		public ActionResult<bool> IsKeyAvail(string Key)
 		{
 			return _data.IsIdAvail(Key);
 		}
 
-		// [HttpPost]
+		[HttpPost]
+		[Route("./api/URL/")]
 		public ActionResult<bool> RegisterUrl(ShortURL url)
 		{
 

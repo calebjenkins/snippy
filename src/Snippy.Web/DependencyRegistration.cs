@@ -16,9 +16,10 @@ namespace Snippy.Web
 			For<IActionContextAccessor>().Use<ActionContextAccessor>().Singleton();
 
 			// Data Layer
-			For<IData>().Use<SnippyData>();
+			// For<IData>().Use<SnippyData>();
+			For<IData>().Use<SampleData>();
 			// For<IDataConfiguration>().Use<DataConfiguration>().Singleton(); // (Moving this to StartUp.cs Service registration so I can utilize the IConfiguration)
-			For<ISnippyDataContext>().Use<SnippyDataContext>();
+			//For<ISnippyDataContext>().Use<SnippyDataContext>();
 		}
 	}
 }

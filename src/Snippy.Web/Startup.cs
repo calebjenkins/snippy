@@ -27,10 +27,10 @@ namespace Snippy.Web
 
 		{
 			// Set Up Data Access
-			var connString = Configuration.GetValue<string>("DBConfig:ConnectionString");
-			var optionsBuilder = new DbContextOptionsBuilder<SnippyDataContext>();
-			var dbOption = optionsBuilder.UseSqlServer(connString).Options;
-			services.AddSingleton<DbContextOptions<SnippyDataContext>>(dbOption);
+			//var connString = Configuration.GetValue<string>("DBConfig:ConnectionString");
+			//var optionsBuilder = new DbContextOptionsBuilder<SnippyDataContext>();
+			//var dbOption = optionsBuilder.UseSqlServer(connString).Options;
+			//services.AddSingleton<DbContextOptions<SnippyDataContext>>(dbOption);
 
 			services.Configure<CookiePolicyOptions>(options =>
 			{
@@ -39,7 +39,8 @@ namespace Snippy.Web
 				options.MinimumSameSitePolicy = SameSiteMode.None;
 			});
 
-			services.UseCustomAuthentication(Configuration);
+			//services.UseCustomAzureAuthentication(Configuration);
+			services.UseFakeAuth();
 
 			services.AddMvc(options =>
 			{
@@ -71,6 +72,8 @@ namespace Snippy.Web
 
 			app.UseAuthentication();
 			app.UseAuthorization();
+
+			//app.UseFAKEAuthorization();
 
 			/*
 			 * It took me about a week of part time research to figure out how

@@ -11,11 +11,12 @@ namespace Snippy.Data
 	{
 
 		private Dictionary<string, ShortURL> _urls = new Dictionary<string, ShortURL>();
-		private readonly DbContextOptions<SnippyDataContext> _options;
+		//private readonly DbContextOptions<SnippyDataContext> _options;
 		private readonly ILogger<SnippyDataContext> _dbLogger;
-		public SampleData(DbContextOptions<SnippyDataContext> Options, ILogger<SnippyDataContext> dbLogger)
+		//public SampleData(DbContextOptions<SnippyDataContext> Options, ILogger<SnippyDataContext> dbLogger)
+		public SampleData(ILogger<SnippyDataContext> dbLogger)
 		{
-			_options = Options;
+			//_options = Options;
 			_dbLogger = dbLogger;
 
 			List<ShortURL> urls = new List<ShortURL>()
@@ -31,12 +32,12 @@ namespace Snippy.Data
 				_urls.Add(url.Key, url);
 			}
 
-			using (var db = new SnippyDataContext(_options, dbLogger))
-			{
-				var o = db.Owners
-					.Where(own => own.FullName == "First Last")
-					.FirstOrDefault();
-			}
+			//using (var db = new SnippyDataContext(_options, dbLogger))
+			//{
+			//	var o = db.Owners
+			//		.Where(own => own.FullName == "First Last")
+			//		.FirstOrDefault();
+			//}
 		}
 
 		public Owner GetOwner(string IdentId)

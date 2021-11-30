@@ -1,15 +1,12 @@
-
-using Lamar;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Authorization;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Snippy.Data;
+using System.Security.Claims;
 
 namespace Snippy.Web
 {
@@ -39,8 +36,12 @@ namespace Snippy.Web
 				options.MinimumSameSitePolicy = SameSiteMode.None;
 			});
 
-			//services.UseCustomAzureAuthentication(Configuration);
-			services.UseFakeAuth();
+			// services.UseCustomAzureAuthentication(Configuration);
+			services.UseFakeAuth(FakeAuthProfile.AZURE_AD);
+			//services.UseFakeAuth((option) =>
+			//{
+			//	option.Claims.Add(new Claim("preferred_username", "Fake Joe"));
+			//});
 
 			services.AddMvc(options =>
 			{
@@ -72,8 +73,6 @@ namespace Snippy.Web
 
 			app.UseAuthentication();
 			app.UseAuthorization();
-
-			//app.UseFAKEAuthorization();
 
 			/*
 			 * It took me about a week of part time research to figure out how

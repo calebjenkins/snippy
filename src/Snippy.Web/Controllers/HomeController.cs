@@ -9,7 +9,6 @@ using Microsoft.Extensions.Logging;
 using Snippy.Data;
 using Snippy.Models;
 using Snippy.Web.Models;
-using Microsoft.Extensions.Logging.Abstractions;
 using Snippy.Models.Productivity;
 
 namespace Snippy.Web.Controllers

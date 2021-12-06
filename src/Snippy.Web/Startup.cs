@@ -1,3 +1,5 @@
+using FakeAuth;
+using FakeAuth.Profiles;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,6 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Security.Claims;
+//using FakeAuth;
 
 namespace Snippy.Web
 {
@@ -36,12 +39,9 @@ namespace Snippy.Web
 				options.MinimumSameSitePolicy = SameSiteMode.None;
 			});
 
+			services.UseFakeAuth<AzureProfile>();
 			// services.UseCustomAzureAuthentication(Configuration);
-			services.UseFakeAuth(FakeAuthProfile.AZURE_AD);
-			//services.UseFakeAuth((option) =>
-			//{
-			//	option.Claims.Add(new Claim("preferred_username", "Fake Joe"));
-			//});
+			
 
 			services.AddMvc(options =>
 			{

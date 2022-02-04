@@ -1,0 +1,86 @@
+Title: Logged In User Interactions
+
+Participant User
+Participant API
+Participant Config
+Participant Data Layer
+Participant DB
+
+Note left of User: Key Exists
+    User -> API: get/key
+
+    API -> Config: get config
+    Config -->> API: Allow Annomous
+    Config -->> API: Annonomous Explorer
+    Config -->> API: Explore Enabled
+
+    API -> Data Layer: Click (key, user details)
+    Data Layer -> DB: Get Key
+    Data Layer -> DB: Get User Details
+    
+    Note left of DB: User Not Exist
+    DB --> Data Layer: User Not Exist
+    Data Layer -> DB: Register User
+    DB -->> Data Layer: User Id
+
+    DB --> Data Layer: URL Details
+    Data Layer -> DB: Register Click (user id)
+    Data Layer -->> API: URL Details
+    API -> User: URL Forward to URL
+
+Note left of User: key not exists
+    User -> API: get/key
+    APi -> Config: get config
+
+    API -> Data Layer: Click (key)
+    Data Layer -> DB: Get Key
+    DB -->> Data Layer: Empty Response
+    Data Layer -->> API: No URL
+    API -> User: UI App - Key not found
+    Note right of User: Create <key> prompt
+
+    User -> API: get/URLS/UserID
+    API -> Data Layer: getUserURLs(user id)
+    Data Layer -> DB: getURLS(user id)
+    DB --> Data Layer: List<URLS>
+    Data Layer -> API: List <URLs>
+    API -> User: Display URLs
+    Note right of User: Edit link on URLs
+
+    Config -> API: Explore Enabled
+    Note left of API: Add link to browse more
+
+    Config --> API: Explore Not Enabeled
+    Note left of API: No browse more link
+
+Note left of User: Explore other links
+
+    User -> API: get/URLS/SearchString
+    API -> User: list URLS
+
+Note left of User: Search Links (AutoComplete)
+    
+    User -> API: get/URLS/AutoComplete/KeyStartsWith/xyz
+    API -> User: list URL Keys
+
+Note left of User: Add new URL
+    User -> API: POST 
+    API -> User: Confirm Saved
+
+Note left of User: Edit exiting URL
+    User -> API: POST -
+    API -> User: Confirm Saved
+
+Note left of User: Delete existing URL
+    User -> API: POST -
+    API -> User: Confirm Saved
+
+Note left of User: Add Owner to URL
+    User -> API: POST -
+    API -> User: Confirm Saved
+
+Note left of User: User Look Up
+    User -> API: POST -
+    API -> User: Confirm Saved
+
+Note left of User: End

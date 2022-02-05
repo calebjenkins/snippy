@@ -1,7 +1,11 @@
-cd .\src\Snippy.Web\ 
-dotnet user-secrets init
+:: for Sequence Diagrams, install:
+:: AleksandarDev.vscode-sequence-diagrams
+
 
 :: Check if User Secrets have been created already
+:: cd .\src\Snippy.Web\ 
+:: dotnet user-secrets init
+
 
 :: Prompt for User Secrets and Set Them - skip if they are left blank
 

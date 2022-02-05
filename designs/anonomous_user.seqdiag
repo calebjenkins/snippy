@@ -17,18 +17,19 @@ Note left of User: key exists
     Config --> API: Anonomous Allowed
     API -> Data Layer: Click (key)
     Data Layer -> DB: Get Key
+    DB --> Data Layer: URL Details
     Data Layer -> DB: Register Click
-    DB -->> Data Layer: URL Details
     Data Layer -->> API: URL Details
-    
     API -> User: URL Forward to URL
 
-Note left of User: Anonomous alowed
+Note left of User: Anonomous allowed
 Note left of User: key not exists
     User -> API: get/key
     APi -> Config: get config
-    API -> DB: Get URL
-    DB -->> API: No URL
+    API -> Data Layer: Click (key)
+    Data Layer -> DB: Get Key
+    DB -->> Data Layer: Empty Response
+    Data Layer -->> API: No URL
     API -> User: UI App - Key not found
     Note right of User: Log In to create
 

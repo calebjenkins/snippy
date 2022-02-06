@@ -1,5 +1,6 @@
 # snippy
 c# URL Shortner
+
 [![.github/workflows/ci-tests.yml](https://github.com/calebjenkins/snippy/actions/workflows/ci-tests.yml/badge.svg)](https://github.com/calebjenkins/snippy/actions/workflows/ci-tests.yml)
 
 

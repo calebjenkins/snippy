@@ -28,6 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Snippy.Data\Snippy.Data.csproj" />
     <ProjectReference Include="..\Snippy.Models\Snippy.Models.csproj" />
+    <ProjectReference Include="..\Snippy.Web\Snippy.Web.csproj" />
   </ItemGroup>
 
 </Project>

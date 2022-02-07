@@ -43,7 +43,7 @@ public class HomeController : Controller
     }
 
     [AllowAnonymous]
-    public IActionResult Short(string Id, string ExtraPath)
+    public IActionResult Short(string Id, string? ExtraPath)
     {
         var httpIdentity = _httpAccessor?.ActionContext?.HttpContext.User.Identity as ClaimsIdentity;
         string? preferred_username = httpIdentity?.Claims.FirstOrDefault(c => c.Type == "preferred_username")?.Value;

@@ -1,11 +1,8 @@
-﻿using System;
+﻿namespace Snippy.Models;
 
-namespace Snippy.Models
+public class ClickRequest
 {
-	public class ClickRequest
-	{
-		public string ShortUrlId { get; set; }
-		public string SourceIp { get; set; }
-		public string IdentId { get; set; }
-	}
+    public string ShortUrlId { get; set; }
+    public string SourceIp { get; set; }
+    public string IdentId { get; set; }
 }

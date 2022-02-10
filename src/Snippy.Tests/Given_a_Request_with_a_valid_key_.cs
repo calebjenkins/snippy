@@ -1,9 +1,11 @@
+using FakeAuth.Profiles;
 using FluentAssertions;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Snippy.Data;
 using Snippy.Web.Controllers;
+using System;
 using Xunit;
 
 namespace Snippy.Tests;
@@ -35,6 +37,15 @@ public class Given_a_Request_with_a_valid_key_
     [Fact]
     public void Should_forward_URL_to_full_URL()
     {
+
+    }
+
+    [Fact]
+    public void List_FakeAuth_Claims()
+    {
+        var keys = new AzureProfile().GetClaimKeys();
+
+        Console.WriteLine($"Keys: { keys }");
 
     }
 }

@@ -82,6 +82,7 @@ public partial class Program
 	public static Action<WebApplicationBuilder> BuildAuth = (builder) =>
 	{
 		builder.Services.UseFakeAuth<AzureProfile>();
+		
 		//builder.Services.AddAuthentication(OpenIdConnectDefaults.AuthenticationScheme)
 		// .AddMicrosoftIdentityWebApp(builder.Configuration.GetSection("AzureAd"));
 

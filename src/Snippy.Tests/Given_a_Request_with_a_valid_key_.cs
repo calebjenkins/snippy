@@ -6,6 +6,8 @@ using Moq;
 using Snippy.Data;
 using Snippy.Web.Controllers;
 using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using Xunit;
 
 namespace Snippy.Tests;
@@ -43,10 +45,17 @@ public class Given_a_Request_with_a_valid_key_
     [Fact]
     public void List_FakeAuth_Claims()
     {
-        var keys = new AzureProfile().GetClaimKeys();
+        List<string> keys = (List<string>)new AzureProfile().GetClaimKeys();
 
-        Console.WriteLine($"Keys: { keys }");
+        Trace.WriteLine("Keys:");
+        keys.ForEach((k) => Trace.WriteLine($" ---> {k}"));
 
+        Debug.WriteLine("Keys:");
+        keys.ForEach((k) => Debug.WriteLine($" ---> {k}"));
+
+
+        Console.WriteLine("Keys:");
+        keys.ForEach((k) => Console.WriteLine($" ---> {k}"));
     }
 }
 

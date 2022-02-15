@@ -9,7 +9,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Host.UseLamar<DependencyRegistration>();
+//builder.Host.UseLamar<DependencyRegistration>();
+builder.Host.UseLamar ((context, registry) =>
+{
+	registry.IncludeRegistry<DependencyRegistration>();
+	registry.AddControllers();
+});
+
 
 // Authentication Schema
 BuildAuth(builder);

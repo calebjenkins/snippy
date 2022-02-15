@@ -45,15 +45,16 @@ public class HomeController : Controller
     [AllowAnonymous]
     public IActionResult Short(string Id, string? ExtraPath)
     {
-        var httpIdentity = _httpAccessor?.ActionContext?.HttpContext.User.Identity as ClaimsIdentity;
-        string? preferred_username = httpIdentity?.Claims.FirstOrDefault(c => c.Type == "preferred_username")?.Value;
-        string? user_name = httpIdentity?.Claims?.FirstOrDefault(c => c.Type == "name")?.Value;
+        var httpIdentity = _httpAccessor.GetIdentity();
+        string? preferred_username = httpIdentity?.GetClaim("preferred_username");
+        string? user_name = httpIdentity?.GetClaim("name");
         string? source_ip = _httpAccessor?.ActionContext?.HttpContext?.Connection?.RemoteIpAddress?.ToString();
+        string? person_id = httpIdentity?.GetClaim(ClaimTypes.NameIdentifier);
 
         var request = new ClickRequest()
         {
             ShortUrlId = Id,
-            IdentId = preferred_username,
+            IdentId = person_id,
             SourceIp = source_ip
         };
 
@@ -84,48 +85,5 @@ public class HomeController : Controller
     public IActionResult Error()
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-    }
-}
-
-[Authorize]
-public class ApiController : Controller
-{
-    private readonly ILogger<HomeController> _logger;
-    private readonly IData _data;
-    private readonly IActionContextAccessor _httpAccessor;
-
-    public ApiController(ILogger<HomeController> logger, IData SnippyData, IActionContextAccessor HttpAccessor)
-    {
-        _logger = logger ?? throw new ArgumentNullException(nameof(logger));
-        _data = SnippyData ?? throw new ArgumentNullException(nameof(SnippyData));
-        _httpAccessor = HttpAccessor ?? throw new ArgumentNullException(nameof(HttpAccessor));
-    }
-
-    [HttpGet("shorts")]
-    public IActionResult GetOwnedShorts()
-    {
-        var httpIdentity = _httpAccessor?.ActionContext?.HttpContext.User.Identity as ClaimsIdentity;
-        string? preferred_username = httpIdentity?.Claims.FirstOrDefault(c => c.Type == "preferred_username")?.Value;
-        string? user_name = httpIdentity?.Claims?.FirstOrDefault(c => c.Type == "name")?.Value;
-        string? source_ip = _httpAccessor?.ActionContext?.HttpContext?.Connection?.RemoteIpAddress?.ToString();
-
-        var owner = _data.GetOwner(user_name);
-        var shorts = _data.GetURLs(owner.Id);
-
-        //var extraPathWithQuery = ExtraPath + HttpContext.Request.QueryString.Value;
-        //var urlDivider = (data.Url.EndsWith('/')) ? string.Empty : "/";
-        //var completeURL = (extraPathWithQuery.Length > 0) ? data.Url + urlDivider + extraPathWithQuery : data.Url;
-
-        var model = new IndexViewModel()
-        {
-            Title = "Snippy Web | Short",
-            Platform = Environment.OSVersion.ToString(),
-            AuthenticatedUser = _data.GetOwner(preferred_username),
-      //      Message = $"-->{Id} | {completeURL}<-- for: {user_name} ({preferred_username}) from IP {request.SourceIp}"
-        };
-
-        _logger.LogInformation($"Log Info from Shorty controller { DateTime.Now.ToString() }");
-
-        return View("Index", model);
     }
 }

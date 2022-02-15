@@ -1,0 +1,39 @@
+Title: Version 1 assumptions / scope
+Participant User
+Participant API
+
+Note left of User: All users are Authenticated
+    User->API: get/key
+    API ->> User: Forward to 
+
+Note left of User: * * * v1 Features (MVP): * * * 
+Note left of User: 1. All users are autrhenticated
+Note left of User: 2. Forward on a key
+Note left of User: 3. No key: display all existing shorts
+Note left of User: 4. Create new short
+Note left of User: 5. Delete Owned short
+
+Note left of User: ~`~`~`~`~`~`~`~`~`~`~`~`~`~`~`~`
+
+Note left of User: * * * v2 Features (Admin and Search): * * * 
+Note left of User: 1. Admin Role
+Note left of User: 2. Admin: Change Owner of Short
+Note left of User: 5. Admin: Option - Support Browse shorts
+Note left of User: 6. Browse and Search Shorts
+Note left of User: 7. Browse shorts by popularity, user, alpha (key)
+
+Note left of User: ~`~`~`~`~`~`~`~`~`~`~`~`~`~`~`~`
+
+Note left of User: * * * v3 Features (Anonomous): * * * 
+Note left of User: 1. Admin: Options - Support Anonomous
+Note left of User: 2. Link through on Anonomous
+
+Note left of User: ~`~`~`~`~`~`~`~`~`~`~`~`~`~`~`~`
+
+Note left of User: * * * v4 Features (Tracking & Multi-Owner): * * * 
+Note left of User: 1. Tracking Click through
+Note left of User: 2. Display Total Clicks
+Note left of User: 3. Add Owner to Short (multi owners)
+
+
+

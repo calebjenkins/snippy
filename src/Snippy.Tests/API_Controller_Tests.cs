@@ -28,7 +28,7 @@ public class API_Controller_Tests
     }
 
     [Fact]
-    public void API_WHoIAm_Should_return_all_claims_asJsonResults()
+    public void API_WhoAmI_Should_return_all_claims_asJsonResults()
     {
         var mockLogger = new Mock<ILogger<ApiController>>();
         var mockData = new Mock<IData>();

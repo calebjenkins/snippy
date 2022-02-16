@@ -14,19 +14,6 @@ namespace Snippy.Tests;
 
 public class API_Controller_Tests
 {
-    private Mock<IActionContextAccessor> getHttpMockWith(IEnumerable<Claim> claims)
-    {
-
-        var Ident = new ClaimsIdentity(claims);
-        var User = new ClaimsPrincipal(Ident);
-        var HttpCx = new TestHttpContext() { User = User };
-        var ActionCx = new ActionContext() { HttpContext = HttpCx };
-        var MockAction = new Mock<IActionContextAccessor>();
-        MockAction.Setup(x => x.ActionContext).Returns(ActionCx).Verifiable();
-
-        return MockAction;
-    }
-
     [Fact]
     public void API_WhoAmI_Should_return_all_claims_asJsonResults()
     {
@@ -61,7 +48,9 @@ public class API_Controller_Tests
     [Fact]
     public void API_DeleteShort_shouldVerifyOwner_and_call_delete()
     {
-        var owner = new Owner() { Email = "email@email.com", Id = "123", UserName = "Fake Joe" };
+        var owner = getOwnerForId("123");
+        IEnumerable<Claim> claims = getClaimsFor(owner);
+
         IList<ShortURL> urls = new List<ShortURL>()
         {
             new ShortURL() { Key = "goog", Url = "http://google.com "},
@@ -70,18 +59,16 @@ public class API_Controller_Tests
 
         var mockLogger = new Mock<ILogger<ApiController>>();
         var mockData = new Mock<IData>();
-        mockData.Setup(x => x.GetOwner(It.Is<string>(s => s == owner.Id)))
+        mockData.Setup(x => x.GetOwner(It.Is<string>(s => s == "123")))
             .Returns(owner)
             .Verifiable();
-        mockData.Setup(x => x.GetURLs(It.Is<string>(s => s == owner.Id)))
+        mockData.Setup(x => x.GetURLs(It.Is<string>(s => s == "123")))
             .Returns(urls)
             .Verifiable();
 
         mockData.Setup(x => x.DeleteShort(It.Is<string>(s => s == "456")))
             .Returns(true)
             .Verifiable();
-
-        IEnumerable<Claim> claims = getClaimsFor(owner);
 
         var httpMock = getHttpMockWith(claims);
         var api = new ApiController(mockLogger.Object, mockData.Object, httpMock.Object);
@@ -96,7 +83,8 @@ public class API_Controller_Tests
     [Fact]
     public void API_DeleteShort_should_return_false_when_no_urls_found()
     {
-        var owner = new Owner() { Email = "email@email.com", Id = "123", UserName = "Fake Joe" };
+        var owner = getOwnerForId("123");
+        IEnumerable<Claim> claims = getClaimsFor(owner);
 
         var mockLogger = new Mock<ILogger<ApiController>>();
         var mockData = new Mock<IData>();
@@ -104,9 +92,8 @@ public class API_Controller_Tests
             .Returns(owner)
             .Verifiable();
 
-        IEnumerable<Claim> claims = getClaimsFor(owner);
-
         var httpMock = getHttpMockWith(claims);
+
         var api = new ApiController(mockLogger.Object, mockData.Object, httpMock.Object);
 
         var results = api.DeleteShort("456");
@@ -116,6 +103,44 @@ public class API_Controller_Tests
         httpMock.VerifyAll();
     }
 
+    [Fact]
+    public void API_GetOwnedShorts_should_return_shorts_for_owner()
+    {
+        var owner = getOwnerForId("123");
+        IEnumerable<Claim> claims = getClaimsFor(owner);
+
+        var mockLogger = new Mock<ILogger<ApiController>>();
+        var mockData = new Mock<IData>();
+        mockData.Setup(x => x.GetOwner(It.Is<string>(s => s == owner.Id)))
+            .Returns(owner)
+            .Verifiable();
+
+        var httpMock = getHttpMockWith(claims);
+
+        var api = new ApiController(mockLogger.Object, mockData.Object, httpMock.Object);
+
+        var results = api.DeleteShort("456");
+        results.Value.Should().Be(false);
+
+        mockData.VerifyAll();
+        httpMock.VerifyAll();
+    }
+
+    private Mock<IActionContextAccessor> getHttpMockWith(IEnumerable<Claim> claims)
+    {
+        var Ident = new ClaimsIdentity(claims);
+        var User = new ClaimsPrincipal(Ident);
+        var HttpCx = new TestHttpContext() { User = User };
+        var ActionCx = new ActionContext() { HttpContext = HttpCx };
+        var MockAction = new Mock<IActionContextAccessor>();
+        MockAction.Setup(x => x.ActionContext).Returns(ActionCx).Verifiable();
+
+        return MockAction;
+    }
+    private Owner getOwnerForId(string ID)
+    {
+        return new Owner() { Email = "email@email.com", Id = ID, UserName = "Fake Joe" };
+    }
     private static IEnumerable<Claim> getClaimsFor(Owner owner)
     {
         return new List<Claim>()

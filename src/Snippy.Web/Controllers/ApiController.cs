@@ -72,7 +72,7 @@ public class ApiController : Controller
         var owner = getOwnerFromDbOrIdent(_httpAccessor.GetIdentity());
 
         var urls = _data.GetURLs(owner.Id);
-        var url = urls.Where(u => u.Key == shortKey).FirstOrDefault();
+        var url = urls?.Where(u => u.Key == shortKey).FirstOrDefault();
         if(url == null)
         {
             return false.ToJsonResult();

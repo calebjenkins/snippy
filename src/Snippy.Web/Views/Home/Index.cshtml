@@ -3,7 +3,7 @@
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
     <p>Platform: @Model.Platform</p>
-    <h2>Welcome @Model.AuthenticatedUser.FirstName</h2>
+    <h2>Welcome @Model.AuthenticatedUser.UserName</h2>
     <ul style="border-width:1px; border-color:gray; border-style:solid; width: 400px; text-align:left;">
         @foreach (var url in Model.AuthenticatedUser.URLs)
         {

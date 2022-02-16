@@ -28,6 +28,16 @@ public class SampleData : IData
 
     }
 
+    public bool DeleteShort(string UrlKey)
+    {
+        return _urls.Remove(UrlKey);
+    }
+
+    public IList<string> GetKeys(string Prefix, int limit = 0)
+    {
+        return _urls.Keys.ToList();
+    }
+
     public Owner GetOwner(string IdentId)
     {
         return new Owner()

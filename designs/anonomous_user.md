@@ -1,0 +1,52 @@
+
+This MD page was created to compare the mermaid rendering of a sequence diagram vs other plugins. I like that GH renders mermaid diagrams directly in the GH MD preview, but I like the actual rendering (locally) of other plugins better. 
+
+Maybe I can style mermaid someway.  ¯\_(ツ)_/¯
+ 
+```mermaid
+sequenceDiagram
+
+Title: Anonomous User Interactions
+Participant User
+Participant API
+Participant Config
+Participant Data Layer
+Participant DB
+
+Note left of User: Anonomous not alowed
+    User->API: get/key
+    Note right of API: Checks Config: Anonomous not allowd
+    API ->> User: Log in force
+
+Note left of User: Anonomous allowed
+Note left of User: key exists
+    User -> API: get/key
+    API -> Config: get config
+    Config --> API: Anonomous Allowed
+    API -> Data Layer: Click (key)
+    Data Layer -> DB: Get Key
+    DB --> Data Layer: URL Details
+    Data Layer -> DB: Register Click
+    Data Layer -->> API: URL Details
+    API -> User: URL Forward to URL
+
+Note left of User: Anonomous allowed
+Note left of User: key not exists
+    User -> API: get/key
+    APi -> Config: get config
+    API -> Data Layer: Click (key)
+    Data Layer -> DB: Get Key
+    DB -->> Data Layer: Empty Response
+    Data Layer -->> API: No URL
+    API -> User: UI App - Key not found
+    Note right of User: Log In to create
+
+    User -> API: get/URLS/MostPopular
+    Config --> API: Anonomous Explore Not Allowed
+    API -> User: null
+
+    Config --> API: Anonomous Explore Allowed
+    API -> User: list URLS
+
+Note left of User: End
+```
